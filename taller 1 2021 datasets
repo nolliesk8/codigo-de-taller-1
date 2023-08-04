@@ -1,0 +1,167 @@
+Datasets con datos faltantes
+Datasets con inconsistencias
+Datasets con problemas de formato (errores de tipo de datos , errores sin sentido , ploteos raros  oen blanco errores de calculo , inconsistensias en analisis)
+Problemas de formatod de fecha y hora (basic principles of the iso 8601 standard)  datasets  ejemplo.xlsx
+
+import pandas as pd 
+
+#importar excel con read_excel
+#no todos los excel se puede leeer en read_excel
+#usar openpyxl (class 6a9) si es necesario
+#usuarios avansados usar  openpyxl en parametro engine
+
+cutomer_calls= pd.read excel("customercalls.xlsx")
+
+#convertir a formato iso 8601
+
+customer_calls['datetime recorded '] =pd.to_datetime(customer_calls["Datetime recorded"])
+print(customer_calls)
+
+#supongamos que queremos solamente la fecha, hay dos maneras de resolver esto: transformarmando  a 
+texto  formateando la fecha formateada o manipulando la  fecha , pero manteniendo su tipo de dato  datetime original.        
+
+#usamos strftime para elegir nuestro formato 
+##en este caso  sera año en 4 digitos , mes con 2 dia con 2
+
+customer_calls ["datetime recorded"]= pd.to_datetime (customer_calls["datetime recorded"]).dt.strftime("%Y-%m-%d")  (metod channing )
+
+#ver si es necesario en internet format codes strftime python
+#usamos dt para acceder a la funcion de la fecha Strftime()que transforma la que viene antes de un texto  con formato expecifico  .
+esta es opcion mas simple y directa si no necesitan que la columna sea tipo datetime .
+
+customer_calls ["datetime recorded"]= pd.to_datetime (customer_calls["datetime recorded"],format='%y-%m-%d')
+
+
+# que pasa si queremos mantener el tipo de dato datetime? podriamos  poner el formato directamente dentro de la funcion to_datetime por ejemplo y .....
+
+customer_calls ["datetime recorded"]= pd.to_datetime (customer_calls["datetime recorded"],infer_datetime_format=true  1 ( adiviname formate de fecha )
+
+# le pedimos que infiera el tipo de fecha ,no nesecitamos darle un formato .esta es la opcion mas rapida y directa
+para convertir formatos diversos de fecha y a la vez mantener la columna como datetime.
+
+
+#solo queremos la parte de la fecha , sin la hora 
+##dt nos permite  acceder a funciones de fecha a pesar
+##de que un dataframe o una serie no contiene funciones de fecha 
+## es un puente  llamado  "accesos"
+customer_calls ["datetime recorded"]= pd.to_datetime (customer_calls["datetime recorded"].dt.date     lo convertimos no la hora solo el date 
+# como datasets sigue teniendo  la hora ,sigue trayendonos la parte de la hora tambien , en 0 como 
+vimos  antes .lo eliminamos con la funcion date, que solo preserva la parte de la fecha .
+
+
+# esas con las dos maneras de convertir formatos de fecha . solo deben decidir:
+si es sufiente  mostrarlo como  un texto 
+si necesitan que se mantenga como tipo de dato datetime 
+
+#Valores duplicados
+alumnos_df = pd.dataframe({
+'nmbre':['santigo', 'santino ', clara' ,'clara '],
+'barrio':['palermo', palermo', 'belgrano , belgrano ],
+'promedio'[7,7,5,5,10] )}
+
+# la funcion dataframe de pandas nos permite crear un dataframe sin  
+importar un datasets.en este caso usamos un diccionario que en sus categorias cada una contiene una...? lista y un diccionario
+
+## eliminar duplicados 
+alumnos_df=alumnos_df.drop_duplicates()
+#la funcion  drop_duplicates() elimina los duplicados del dataframe automaticamente 
+
+##eliminar duplicados
+Alumnos_df=alumnos_df.drop_duplicates(subset=['barrio])
+
+#podemos especificar una (o mas columnas especificas para  remover duplicados ,en vez de todo el dataset.
+
+#VAlores faltantes  NANS  (CLass20)
+#primero  tenemos que identificar  si hay datos faltantes en alguna columna especifica 
+#para esto usamos la funcion info() sobre el dataframe y vemos si el total dec entries coincide  con la cuenta non-null. (cuales son los faltantes y en que columnas 
+#si hay flatantes tenemos que decidir  entre
+
+#eliminarlos con dropna()
+#rellenar ese espacio con un valor fijo  odeterminado estadisticamente usando fillna() o interpolate ()
+#ejemplo
+#mostrando que celdas especificas tienen faltantes
+
+nexflix_df_short= netflix_df_short[netflix_df_short['director'].isna()]
+
+# una vez identificada la columna con faltantes puede filtrar con isna() la misma para tenes el mismo
+datasets , pero solo con las  filas que tengan valores faltantes ,
+el resto de las columnas tendran los valores normales, para mayor referencia 
+
+# reemplazando  director faltantes por needs director 
+netflix_df_short['director '].fillna ('needs director'., inplace=true)
+
+#como dijimos antes una de la opciones es rellenar con los faltantes
+con un valor fijo , la funcion  
+fillna() se ocupa de remplazar todos esos valores por
+lo que le inmdiquemos como parametro 
+
+
+#interpolation linear usando direccion y
+#limite en cantidad de reeemplazos
+interpol_df=interpol_df.interpolate(
+method='linear',
+limit_direction=backward',
+limit=1)
+
+# la funcion interpolate () nos ayudara  con esto y dispondremos varios 
+metodos estadisticos  para completar la serie , ademas de poder elegir en que 
+direccion de la serie 
+nos dirigimos y cuantos valores a remplazar queremios.
+
+#y el ultimo
+#drop filas con nan (axis=0 o sea filas  tacito 
+
+dropna_df=dropna_df.dropna()
+
+#finalmente dropna() elimina  los valores faltantes si no queremos hacer ningun reemplazo . nuevamente  revisar clase 230 y el ej 
+pandasmanejovaloresfaltantesnan.py para uns explicacion detallada de cada  funcion y sus correspondientes ejemplos.
+
+#datos distintos  en la misma columna
+
+alumnos_df[['nombre,'apellido]]= alumnos_df['nombre'].str.split('.',expand=true)
+
+# necesitamos referir una columana "origen" que tiene los datos (nombre) y una "destino" 
+que va a ser la nueva columna a crear (apellido ) str es un accesro o " puente 
+entre pandas y las funciones de manejo de texoto o string . este puente  nos permite luego
+usar la funcion split para dividir el texto justo donde hay un punto 
+
+#reordenar las columnas es cuestion  de filtrar el dataset
+##pero  pero poniendo todas  las columnas  que existen  en una sola  lista
+## en el orden que queremos 
+
+alumnos_df=alumnos_df[['nombre', 'apellido','barrio', ' promedio]]
+
+y este  otro ejemplo de porque  hay que  saber bien los tipos de datos de python como las listas o los 
+diccionarios basta hacer una lista con las columnas en el orden que queremos y filtrarnuestro dataset para que se reordenen a gusto .
+
+inconsistencia de upper7 lowercase 
+
+alumnos_df['nombre']=alumnos_df['nombre'].str
+title()
+
+#como mencionamos antes , hay accesors o funciones que nos  hacen de "puente" entre los dataframe de 
+pandas y sus funciones  y otras exrnas str nos permite acceder a
+funciones de texto .title() transforma un texto de manera que la primera 
+letra de cada paralabra sea mayuscula 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
